@@ -19,9 +19,16 @@ public class Client {
 
     private String name;
     private String cc;
-    private String Tel;
+    private String phone;
     private String email;
     private String adress;
-    
+
+    public Client(String name, String cc, String phone, String email, String adress){
+        this.name = name;
+        this.cc = cc;
+        this.phone = phone;
+        this.email = email;
+        this.adress = adress;
+    }
 }
 
