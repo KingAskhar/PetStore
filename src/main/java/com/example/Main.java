@@ -1,7 +1,7 @@
 package com.example;
 
 import com.example.repository.ProductRepository;
-import com.example.repository.ClientRepository;
+import com.example.repository.UserRepository;
 import com.example.repository.EmployeeRepository;
 
 import com.example.util.JpaUtil;
@@ -14,13 +14,13 @@ public class Main {
     private static final Scanner scanner = new Scanner(System.in);
     private static EntityManager em;
     private static ProductRepository productRepo;
-    private static ClientRepository clientRepo;
+    private static UserRepository clientRepo;
     private static EmployeeRepository employeeRepo;
 
     public static void main(String[] args) {
         em = JpaUtil.getEntityManager();
         productRepo = new ProductRepository(em);
-        clientRepo = new ClientRepository(em);
+        clientRepo = new UserRepository(em);
         employeeRepo = new EmployeeRepository(em);
 
         boolean exit = false;
@@ -114,7 +114,7 @@ public class Main {
                 String email = scanner.nextLine();
                 System.out.print("Teléfono: ");
                 String phone = scanner.nextLine();
-                clientRepo.save(new Client(name, email, phone));
+                clientRepo.save(new User(name, email, phone));
                 System.out.println("Cliente guardado.");
             }
             case 2 -> clientRepo.findAll().forEach(System.out::println);
