@@ -3,11 +3,16 @@ package com.example;
 import com.example.repository.ProductRepository;
 import com.example.repository.ClientRepository;
 import com.example.repository.EmployeeRepository;
+import com.example.repository.SellsRepository;
 
 import com.example.util.JpaUtil;
 import jakarta.persistence.EntityManager;
+import com.example.Sells;
+import java.util.List;
+import java.util.ArrayList;
 
 import java.util.Scanner;
+import java.util.ArrayList;
 import java.util.Optional;
 
 public class Main {
@@ -16,12 +21,14 @@ public class Main {
     private static ProductRepository productRepo;
     private static ClientRepository clientRepo;
     private static EmployeeRepository employeeRepo;
+    private static SellsRepository sellsRepo;
 
     public static void main(String[] args) {
         em = JpaUtil.getEntityManager();
         productRepo = new ProductRepository(em);
         clientRepo = new ClientRepository(em);
         employeeRepo = new EmployeeRepository(em);
+        sellsRepo = new SellsRepository(em);
 
         boolean exit = false;
         while (!exit) {
@@ -29,6 +36,7 @@ public class Main {
             System.out.println("1. Gestionar Productos");
             System.out.println("2. Gestionar Clientes");
             System.out.println("3. Gestionar Empleados");
+            System.out.println("4. Gestionar Ventas");
 
             System.out.println("0. Salir");
             System.out.print("Seleccione una opción: ");
@@ -40,6 +48,7 @@ public class Main {
                 case 1 -> menuProducts();
                 case 2 -> menuClients();
                 case 3 -> menuEmployees();
+                case 4 -> menuSells();
 
                 case 0 -> exit = true;
                 default -> System.out.println("Opción no válida.");
@@ -194,5 +203,47 @@ public class Main {
             }
         }
     }
+    private static void menuSells() {
+
+    System.out.println("\n--- GESTIÓN DE VENTAS ---");
+    System.out.println("1. Crear");
+    System.out.println("2. Listar");
+    System.out.println("3. Eliminar");
+    System.out.print("Opción: ");
+    int opt = scanner.nextInt();
+    scanner.nextLine();
+    switch (opt) {
+        case 1 -> {
+            System.out.print("ID del cliente: ");
+            long clientId = scanner.nextLong();
+            scanner.nextLine();
+            clientRepo.findById(clientId).ifPresentOrElse(client -> {
+                List<Product> selectedProducts = new ArrayList<>();
+                String another = "s";
+                while (another.equalsIgnoreCase("s")) {
+                    System.out.print("ID del producto: ");
+                    long productId = scanner.nextLong();
+                    scanner.nextLine();
+                    productRepo.findById(productId).ifPresent(selectedProducts::add);
+                    System.out.print("¿Agregar otro producto? (s/n): ");
+                    another = scanner.nextLine();
+                }
+                System.out.print("Total a pagar: ");
+                double cash = scanner.nextDouble();
+                sellsRepo.save(new Sells(client, selectedProducts, cash));
+                System.out.println("Venta guardada.");
+            }, () -> System.out.println("Cliente no encontrado."));
+        }
+        case 2 -> sellsRepo.findAll().forEach(System.out::println);
+        case 3 -> {
+            System.out.print("ID a eliminar: ");
+            long id = scanner.nextLong();
+            sellsRepo.findById(id).ifPresentOrElse(s -> {
+                sellsRepo.delete(s);
+                System.out.println("Venta eliminada.");
+            }, () -> System.out.println("No encontrada."));
+        }
+    }
+}
 
 }
