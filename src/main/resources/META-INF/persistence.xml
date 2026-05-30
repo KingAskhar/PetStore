@@ -4,6 +4,7 @@
         <class>com.example.Product</class>
         <class>com.example.Client</class>
         <class>com.example.Employee</class>
+        <class>com.example.Sells</class>
 
         <properties>
             <!-- Parámetros de Conexión (PostgreSQL Prisma) -->
