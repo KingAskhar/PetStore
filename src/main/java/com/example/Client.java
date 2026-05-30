@@ -23,6 +23,10 @@ public class Client {
     private String email;
     private String adress;
 
+    public Client() {
+
+    }
+    
     public Client(String name, String cc, String phone, String email, String adress){
         this.name = name;
         this.cc = cc;
